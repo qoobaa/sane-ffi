@@ -1,4 +1,4 @@
-module Sane
+class Sane
   module API
     extend FFI::Library
 
@@ -12,9 +12,6 @@ module Sane
 
     class Device < FFI::Struct
       layout :name, :string, :vendor, :string, :model, :string, :type, :string
-
-      def to_s; self[:name] end
-      def inspect; "#<#{self.class.name}:'#{to_s}'>" end
     end
 
     class OptionDescriptor < FFI::Struct

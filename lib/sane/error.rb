@@ -1,4 +1,4 @@
-module Sane
+class Sane
   class Error < StandardError
     attr_reader :status
 
