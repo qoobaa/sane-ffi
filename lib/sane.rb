@@ -32,6 +32,61 @@ module Sane
       API.sane_close(device_handle)
     end
 
+    def get_option_descriptor(device_handle, option)
+      result = API.sane_get_option_descriptor(device_handle, option)
+      API::OptionDescriptor.new(result)
+    end
+
+    def get_option(device_handle, option)
+      descriptor = get_option_descriptor(device_handle, option)
+
+      case descriptor[:type]
+      when :string
+        value_pointer = FFI::MemoryPointer.new(:pointer)
+      when :bool, :int, :fixed
+        value_pointer = FFI::MemoryPointer.new(:int)
+      else
+        return nil
+      end
+
+      check_status!(API.sane_control_option(device_handle, option, :get_value, value_pointer, FFI::Pointer::NULL))
+
+      case descriptor[:type]
+      when :string
+        value_pointer.read_string
+      when :bool
+        !value_pointer.read_int.zero?
+      when :int, :fixed
+        value_pointer.read_int
+      end
+    end
+
+    def set_option(device_handle, option, value)
+      descriptor = get_option_descriptor(device_handle, option)
+
+      case descriptor[:type]
+      when :string
+        value_pointer = FFI::MemoryPointer.from_string(value)
+      when :int, :fixed
+        value_pointer = FFI::MemoryPointer.new(:int).write_int(value)
+      when :bool
+        value_pointer = FFI::MemoryPointer.new(:int).write_int(value ? 1 : 0)
+      else
+        return nil
+      end
+
+      check_status!(API.sane_control_option(device_handle, option, :set_value, value_pointer, FFI::Pointer::NULL))
+
+      case descriptor[:type]
+      when :string
+        value_pointer.read_string
+      when :bool
+        !value_pointer.read_int.zero?
+      when :int, :fixed
+        value_pointer.read_int
+      end
+    end
+
     def check_status!(status)
       raise Error.new(API.sane_strstatus(status), status) if status != :good
     end
