@@ -1,0 +1,7 @@
+= SANE FFI
+
+Scanner Access Now Easier in Ruby.
+
+== Copyright
+
+Copyright (c) 2011 Jakub Kuźma

@@ -77,18 +77,20 @@ class Sane
         begin
           self[i]
         rescue Error
-          nil # we can't get values of some options, ignore them
+          nil # we can't read values of some options (i.e. buttons), ignore them
         end
       end
     end
 
     def options
-      {}.tap { |hash| option_count.times { |i| hash[option_names[i]] = option_values[i] } }
+      result = {}
+      option_count.times { |i| hash[option_names[i]] = option_values[i] }
+      result
     end
 
     def option_lookup(option_name)
       return option_name if (0..option_count).include?(option_name)
-      option_descriptors.index { |option| option[:name] == option_name.to_s } or raise ArgumentError, "Option not found: #{option_name}"
+      option_descriptors.index { |option| option[:name] == option_name.to_s } or raise(ArgumentError, "Option not found: #{option_name}")
     end
 
     def describe(option)
@@ -98,11 +100,11 @@ class Sane
     private
 
     def ensure_closed!
-      raise "Device is already open" if open?
+      raise("Device is already open") if open?
     end
 
     def ensure_open!
-      raise "Device is closed" if closed?
+      raise("Device is closed") if closed?
     end
   end
 end

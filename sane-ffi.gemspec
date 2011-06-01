@@ -12,8 +12,6 @@ Gem::Specification.new do |s|
   s.summary     = %q{SANE bindings}
   s.description = %q{Scanner Access now Easier}
 
-  # s.rubyforge_project = "sane"
-
   s.add_dependency "ffi"
 
   s.files         = `git ls-files`.split("\n")

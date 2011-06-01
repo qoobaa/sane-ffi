@@ -13,7 +13,14 @@ class Sane
     class Device < FFI::Struct
       layout :name, :string, :vendor, :string, :model, :string, :type, :string
 
-      def to_hash; {name: self[:name], vendor: self[:vendor], model: self[:model], type: self[:type]} end
+      def to_hash
+        {
+          :name => self[:name],
+          :vendor => self[:vendor],
+          :model => self[:model],
+          :type => self[:type]
+        }
+      end
     end
 
     class OptionDescriptor < FFI::Struct
@@ -22,13 +29,32 @@ class Sane
       end
       layout :name, :string, :title, :string, :desc, :string, :type, :value_type, :unit, :unit, :size, :int, :cap, :int, :constraint_type, ConstraintType
 
-      def to_hash; {name: self[:name], title: self[:title], desc: self[:desc], type: self[:type], unit: self[:unit], size: self[:size], cap: self[:cap]} end
+      def to_hash;
+        {
+          :name => self[:name],
+          :title => self[:title],
+          :desc => self[:desc],
+          :type => self[:type],
+          :unit => self[:unit],
+          :size => self[:size],
+          :cap => self[:cap]
+        }
+      end
     end
 
     class Parameters < FFI::Struct
       layout :format, :frame, :last_frame, :int, :bytes_per_line, :int, :pixels_per_line, :int, :lines, :int, :depth, :int
 
-      def to_hash; {format: self[:format], last_frame: self[:last_frame], bytes_per_line: self[:bytes_per_line], pixels_per_line: self[:pixels_per_line], lines: self[:lines], depth: self[:depth]} end
+      def to_hash
+        {
+          :format => self[:format],
+          :last_frame => self[:last_frame],
+          :bytes_per_line => self[:bytes_per_line],
+          :pixels_per_line => self[:pixels_per_line],
+          :lines => self[:lines],
+          :depth => self[:depth]
+        }
+      end
     end
 
     # extern SANE_Status sane_init (SANE_Int * version_code, SANE_Auth_Callback authorize);

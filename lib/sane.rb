@@ -15,7 +15,7 @@ class Sane
 
   def self.open
     instance.send(:init)
-    yield instance
+    yield(instance)
   ensure
     instance.send(:exit)
   end
@@ -52,12 +52,12 @@ class Sane
     devices_pointer_pointer = FFI::MemoryPointer.new(:pointer)
     check_status!(API.sane_get_devices(devices_pointer_pointer, 0))
     devices_pointer = devices_pointer_pointer.read_pointer
-    [].tap do |result|
-      until devices_pointer.read_pointer.null?
-        result << API::Device.new(devices_pointer.read_pointer).to_hash
-        devices_pointer += FFI.type_size(:pointer)
-      end
+    result = []
+    until devices_pointer.read_pointer.null?
+      result << API::Device.new(devices_pointer.read_pointer).to_hash
+      devices_pointer += FFI.type_size(:pointer)
     end
+    result
   end
 
   def open(device_name)
@@ -156,14 +156,14 @@ class Sane
   end
 
   def ensure_not_initialized!
-    raise "SANE library is already initialized" if initialized?
+    raise("SANE library is already initialized") if initialized?
   end
 
   def ensure_initialized!
-    raise "SANE library is not initialized" if not_initialized?
+    raise("SANE library is not initialized") if not_initialized?
   end
 
   def check_status!(status)
-    raise Error.new(strstatus(status), status) unless status == :good
+    raise(Error.new(strstatus(status), status)) unless status == :good
   end
 end
