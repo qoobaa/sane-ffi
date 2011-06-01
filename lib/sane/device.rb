@@ -1,5 +1,7 @@
 class Sane
   class Device
+    attr_reader :name, :vendor, :model, :type
+
     def initialize(options)
       @name = options[:name]
       @vendor = options[:vendor]
@@ -44,6 +46,21 @@ class Sane
       Sane.instance.send(:read, @handle)
     end
 
+    def cancel
+      ensure_open!
+      Sane.instance.send(:cancel, @handle)
+    end
+
+    def sync
+      ensure_open!
+      Sane.instance.send(:set_io_mode, @handle, false)
+    end
+
+    def async
+      ensure_open!
+      Sane.instance.send(:set_io_mode, @handle, true)
+    end
+
     def option_count
       ensure_open!
       Sane.instance.send(:get_option, @handle, 0)
@@ -76,16 +93,18 @@ class Sane
       option_count.times.map do |i|
         begin
           self[i]
-        rescue Error
-          nil # we can't read values of some options (i.e. buttons), ignore them
+        rescue Error => e
+          if e.status == :inval
+            nil # we can't read values of some options (i.e. buttons), ignore them
+          else
+            raise e
+          end
         end
       end
     end
 
     def options
-      result = {}
-      option_count.times { |i| hash[option_names[i]] = option_values[i] }
-      result
+      Hash[*option_names.zip(option_values).flatten]
     end
 
     def option_lookup(option_name)

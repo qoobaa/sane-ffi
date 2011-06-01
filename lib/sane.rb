@@ -155,6 +155,14 @@ class Sane
     API::Parameters.new(parameters_pointer).to_hash
   end
 
+  def set_io_mode(handle, non_blocking)
+    check_status!(API.sane_set_io_mode(handle, non_blocking ? 1 : 0))
+  end
+
+  def cancel(handle)
+    API.sane_cancel(handle)
+  end
+
   def ensure_not_initialized!
     raise("SANE library is already initialized") if initialized?
   end

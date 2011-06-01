@@ -1,6 +1,6 @@
 = SANE FFI
 
-Scanner Access Now Easier in Ruby.
+Scanner Access Now Easier in Ruby using FFI. This gem provides bindings
 
 == Copyright
 
