@@ -93,11 +93,11 @@ class Sane
       option_count.times.map do |i|
         begin
           self[i]
-        rescue Error => e
-          if e.status == :inval
+        rescue Error => exception
+          if exception.status == :inval
             nil # we can't read values of some options (i.e. buttons), ignore them
           else
-            raise e
+            raise exception
           end
         end
       end
@@ -105,11 +105,6 @@ class Sane
 
     def options
       Hash[*option_names.zip(option_values).flatten]
-    end
-
-    def option_lookup(option_name)
-      return option_name if (0..option_count).include?(option_name)
-      option_descriptors.index { |option| option[:name] == option_name.to_s } or raise(ArgumentError, "Option not found: #{option_name}")
     end
 
     def describe(option)
@@ -121,6 +116,11 @@ class Sane
     end
 
     private
+
+    def option_lookup(option_name)
+      return option_name if (0..option_count).include?(option_name)
+      option_descriptors.index { |option| option[:name] == option_name.to_s } or raise(ArgumentError, "Option not found: #{option_name}")
+    end
 
     def ensure_closed!
       raise("Device is already open") if open?
