@@ -116,6 +116,10 @@ class Sane
       option_descriptors[option_lookup(option)]
     end
 
+    def inspect
+      %Q{#<#{self.class.name}:"#{name}">}
+    end
+
     private
 
     def ensure_closed!

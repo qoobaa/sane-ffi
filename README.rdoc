@@ -1,6 +1,35 @@
 = SANE FFI
 
-Scanner Access Now Easier in Ruby using FFI. This gem provides bindings
+Scanner Access Now Easier in Ruby using FFI. This gem provides
+bindings to SANE library using Ruby FFI. You can easily access to the
+device state (i.e. buttons), setup device parameters, scan images,
+etc.
+
+== Usage
+
+  >> require "sane"
+  => true
+  >> Sane.open { |sane| puts sane.devices.inspect }
+  [#<Sane::Device:"genesys:libusb:002:032">]
+  => nil
+  >> Sane.open { |sane| puts sane.devices.first.name }
+  genesys:libusb:002:032
+  => nil
+  >> Sane.open { |sane| puts sane.devices.first.vendor }
+  Canon
+  => nil
+  >> Sane.open { |sane| puts sane.devices.first.model }
+  LiDE 100
+  => nil
+  >> Sane.open { |sane| puts sane.devices.first.type }
+  flatbed scanner
+  => nil
+  >> Sane.open { |sane| sane.devices.first.open { |device| puts device.describe(:copy) } }
+  {:name=>"copy", :title=>"Copy button", :desc=>"Copy button", :type=>:bool, :unit=>:none, :size=>4, :cap=>70}
+  => nil
+  >> Sane.open { |sane| sane.devices.first.open { |device| puts device[:copy] } }
+  false
+  => nil
 
 == Copyright
 
