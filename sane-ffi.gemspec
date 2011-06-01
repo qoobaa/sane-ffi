@@ -1,10 +1,10 @@
 # -*- encoding: utf-8 -*-
 $:.push File.expand_path("../lib", __FILE__)
-require "scanner/version"
+require "sane/version"
 
 Gem::Specification.new do |s|
-  s.name        = "scanner"
-  s.version     = Scanner::VERSION
+  s.name        = "sane-ffi"
+  s.version     = Sane::VERSION
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Jakub Kuźma"]
   s.email       = ["qoobaa@gmail.com"]
@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
   s.summary     = %q{SANE bindings}
   s.description = %q{Scanner Access now Easier}
 
-  # s.rubyforge_project = "scanner"
+  # s.rubyforge_project = "sane"
 
   s.add_dependency "ffi"
 
