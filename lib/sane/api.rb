@@ -2,7 +2,9 @@ class Sane
   module API
     extend FFI::Library
 
-    ffi_lib "sane"
+    lib_paths = Array(ENV["SANE_LIB"] || Dir["/{opt,usr}/{,local/}lib{,64}/libsane.{1.dylib,so.1*}"])
+    fallback_names = %w(libsane.1.dylib libsane.so.1 sane1.dll)
+    ffi_lib(lib_paths + fallback_names)
 
     enum :status, [:good, 0, :unsupported, :cancelled, :device_busy, :inval, :eof, :jammed, :no_docs, :cover_open, :io_error, :no_mem, :access_denied]
     enum :value_type, [:bool, 0, :int, :fixed, :string, :button, :group]
